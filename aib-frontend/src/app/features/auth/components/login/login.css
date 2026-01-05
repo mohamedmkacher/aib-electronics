@@ -1,0 +1,64 @@
+/* login.css */
+.glass-card-modal {
+  background: rgba(15, 15, 26, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.glass-card-modal .swal2-actions button {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.5);
+}
+
+.btn-cyber {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #00f0ff, #ff00ff);
+  border: none;
+  border-radius: 8px;
+  color: black !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cyber-deny {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #ff00ff, #a855f7);
+  border: none;
+  border-radius: 8px;
+  color: white !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cyber-outline {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid #6b6b8a;
+  border-radius: 8px;
+  color: #a0a0c0 !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
