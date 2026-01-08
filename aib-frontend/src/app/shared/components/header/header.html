@@ -1,0 +1,531 @@
+<!-- header.component.html - CYBER-TECH REDESIGN -->
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+        [class.header-scrolled]="isScrolled">
+
+  <!-- Animated Top Bar -->
+  <div class="h-1 w-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent opacity-60"></div>
+
+  <nav class="glass border-b border-white/5">
+    <div class="container mx-auto px-4 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+
+        <!-- Logo with Glow Effect -->
+        <a routerLink="/" class="flex items-center gap-3 group">
+          <!-- Animated Logo Icon -->
+          <div class="relative">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#ff00ff] p-[2px]
+                        group-hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] transition-all duration-500">
+              <div class="w-full h-full rounded-[10px] bg-[#0a0a0f] flex items-center justify-center">
+                <img src="favicon-32x32.png" alt="aib" height="32" width="32">
+              </div>
+            </div>
+            <!-- Pulse Ring -->
+            <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#ff00ff]
+                        opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500"></div>
+          </div>
+
+          <!-- Brand Name -->
+          <div class="hidden sm:block">
+            <span class="font-['Orbitron'] text-xl font-bold tracking-wider">
+              <span class="text-white">A</span><span class="text-gradient">IB</span>
+            </span>
+            <div class="text-[10px] text-[#a0a0c0] tracking-[0.3em] uppercase">Electronics</div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex items-center gap-1">
+          <!-- Nav Links -->
+          <a routerLink="/products" routerLinkActive="nav-active"
+             class="nav-link group">
+            <span class="nav-link-text">Products</span>
+            <span class="nav-link-glow"></span>
+          </a>
+
+          <a routerLink="/categories" routerLinkActive="nav-active"
+             class="nav-link group">
+            <span class="nav-link-text">Categories</span>
+            <span class="nav-link-glow"></span>
+          </a>
+
+
+
+          <a routerLink="/contact" routerLinkActive="nav-active"
+             class="nav-link group">
+            <span class="nav-link-text">Contact</span>
+            <span class="nav-link-glow"></span>
+          </a>
+
+          <!-- Admin Links Divider -->
+          @if (isAdmin()) {
+            <div class="h-8 w-px bg-gradient-to-b from-transparent via-[#00f0ff]/30 to-transparent mx-4"></div>
+
+            <a routerLink="/admin/dashboard" routerLinkActive="nav-active-admin"
+               class="nav-link-admin group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              </svg>
+              <span>Dashboard</span>
+            </a>
+
+            <a routerLink="/admin/categories" routerLinkActive="nav-active-admin"
+               class="nav-link-admin group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+              <span>Categories</span>
+            </a>
+
+            <a routerLink="/admin/products" routerLinkActive="nav-active-admin"
+               class="nav-link-admin group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+              <span>Products</span>
+            </a>
+
+            <a routerLink="/admin/orders" routerLinkActive="nav-active-admin"
+               class="nav-link-admin group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              <span>Orders</span>
+            </a>
+            <a routerLink="/admin/users" routerLinkActive="nav-active-admin"
+               class="nav-link-admin group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+              <span>Users</span>
+            </a>
+          }
+        </div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-3">
+
+          <!-- Search Button -->
+          <button (click)="openSearch()" class="action-btn group" aria-label="Search">
+            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </button>
+
+          <!-- Cart Button (Non-Admin Only) -->
+          @if (!currentUser || (currentUser && !isAdmin())) {
+            <button routerLink="/cart" class="action-btn group relative" aria-label="Shopping Cart">
+              <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <!-- Cart Badge -->
+              @if ((cartService.itemCount$ | async) || 0 > 0) {
+                <span class="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center
+                             bg-gradient-to-r from-[#ff00ff] to-[#00f0ff] rounded-full
+                             text-[10px] font-bold text-black
+                             shadow-[0_0_10px_rgba(255,0,255,0.5)]
+                             animate-pulse">
+                  {{ (cartService.itemCount$ | async) || 0 }}
+                </span>
+              }
+            </button>
+          }
+
+          <!-- User Menu -->
+          @if (currentUser) {
+            <div class="relative">
+              <button (click)="toggleMenu()"
+                      class="flex items-center gap-2 pl-3 pr-2 py-2 rounded-xl
+                             bg-white/5 border border-white/10
+                             hover:bg-white/10 hover:border-[#00f0ff]/30
+                             transition-all duration-300 group">
+                <!-- Avatar -->
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00f0ff] to-[#ff00ff] p-[1px]">
+                  <div class="w-full h-full rounded-[7px] bg-[#0f0f1a] flex items-center justify-center
+                              font-['Orbitron'] font-bold text-sm text-[#00f0ff]">
+                    {{ currentUser.firstName.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <svg class="w-4 h-4 text-[#a0a0c0] transition-transform duration-300"
+                     [class.rotate-180]="isMenuOpen"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              @if (isMenuOpen) {
+                <div class="absolute right-0 mt-3 w-64
+                            bg-[#0f0f1a] rounded-2xl overflow-hidden
+                            border border-white/10
+                            shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,240,255,0.1)]
+                            animate-slide-down origin-top-right">
+
+                  <!-- User Info -->
+                  <div class="p-4 border-b border-white/10 bg-gradient-to-r from-[#00f0ff]/5 to-[#ff00ff]/5">
+                    <p class="font-['Orbitron'] font-semibold text-white">
+                      {{ currentUser.firstName }} {{ currentUser.lastName }}
+                    </p>
+                    <p class="text-xs text-[#a0a0c0] truncate mt-1">
+                      {{ currentUser.email }}
+                    </p>
+                    @if (isAdmin()) {
+                      <span class="inline-block mt-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider
+                                   bg-gradient-to-r from-[#ff00ff] to-[#00f0ff] text-black rounded-full">
+                        Admin
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Menu Items -->
+                  <div class="p-2">
+                    @if (isAdmin()) {
+                      <a routerLink="/admin/dashboard" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                        </svg>
+                        <span>Admin Dashboard</span>
+                      </a>
+                      <a routerLink="/admin/categories" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                        <span>Manage Categories</span>
+                      </a>
+                      <a routerLink="/admin/products" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        <span>Manage Products</span>
+                      </a>
+                      <a routerLink="/admin/orders" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <span>Manage Orders</span>
+                      </a>
+                      <a routerLink="/admin/users" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <span>Manage Users</span>
+                      </a>
+                    } @else {
+                      <a routerLink="/profile" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <span>My Profile</span>
+                      </a>
+                      <a routerLink="/orders" (click)="toggleMenu()" class="dropdown-item">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <span>My Orders</span>
+                      </a>
+                    }
+                  </div>
+
+                  <!-- Logout -->
+                  <div class="p-2 border-t border-white/10">
+                    <button (click)="logout()"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl
+                                   text-red-400 hover:bg-red-500/10 hover:text-red-300
+                                   transition-all duration-200">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                      </svg>
+                      <span class="font-medium">Logout</span>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <!-- Guest Buttons -->
+            <div class="flex items-center gap-2">
+              <a routerLink="/auth/login"
+                 class="hidden sm:flex items-center gap-2 px-4 py-2
+                        text-sm font-medium text-[#00f0ff]
+                        border border-[#00f0ff]/30 rounded-xl
+                        hover:bg-[#00f0ff]/10 hover:border-[#00f0ff]/50
+                        transition-all duration-300">
+                Login
+              </a>
+              <a routerLink="/auth/register" class="btn-cyber text-sm !px-5 !py-2.5">
+                Sign Up
+              </a>
+            </div>
+          }
+
+          <!-- Mobile Menu Toggle -->
+          <button (click)="toggleMobileMenu()"
+                  class="lg:hidden action-btn"
+                  aria-label="Toggle Menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              @if (!isMobileMenuOpen) {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              }
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  @if (isMobileMenuOpen) {
+    <div class="lg:hidden fixed inset-0 top-[85px] z-40">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="toggleMobileMenu()"></div>
+
+      <!-- Menu Content -->
+      <div class="relative h-full max-h-[calc(100vh-85px)] overflow-y-auto
+                  bg-gradient-to-b from-[#0f0f1a] to-[#0a0a0f]
+                  border-t border-white/5
+                  animate-slide-down">
+        <div class="container mx-auto px-4 py-6 space-y-2">
+
+          <a routerLink="/products" (click)="toggleMobileMenu()" class="mobile-nav-item">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+            <span>Products</span>
+          </a>
+
+          <a routerLink="/categories" (click)="toggleMobileMenu()" class="mobile-nav-item">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+            </svg>
+            <span>Categories</span>
+          </a>
+
+          <a routerLink="/contact" (click)="toggleMobileMenu()" class="mobile-nav-item">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>Contact</span>
+          </a>
+
+          @if (isAdmin()) {
+            <div class="my-4 h-px bg-gradient-to-r from-transparent via-[#00f0ff]/30 to-transparent"></div>
+
+            <a routerLink="/admin/dashboard" (click)="toggleMobileMenu()" class="mobile-nav-item-admin">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              </svg>
+              <span>Admin Dashboard</span>
+            </a>
+
+            <a routerLink="/admin/categories" (click)="toggleMobileMenu()" class="mobile-nav-item-admin">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+              <span>Manage Categories</span>
+            </a>
+
+            <a routerLink="/admin/products" (click)="toggleMobileMenu()" class="mobile-nav-item-admin">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+              <span>Manage Products</span>
+            </a>
+
+            <a routerLink="/admin/orders" (click)="toggleMobileMenu()" class="mobile-nav-item-admin">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              <span>Manage Orders</span>
+            </a>
+
+          }
+
+          @if (!currentUser) {
+            <div class="my-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            <div class="flex gap-3 pt-2">
+              <a routerLink="/auth/login" (click)="toggleMobileMenu()"
+                 class="flex-1 btn-cyber-outline text-center">
+                Login
+              </a>
+              <a routerLink="/auth/register" (click)="toggleMobileMenu()"
+                 class="flex-1 btn-cyber text-center">
+                Sign Up
+              </a>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</header>
+
+<!-- Spacer for fixed header -->
+<div class="h-[85px]"></div>
+
+<style>
+  /* Header Scroll State */
+  .header-scrolled nav {
+    background: rgba(10, 10, 15, 0.95) !important;
+    backdrop-filter: blur(20px);
+  }
+
+  /* Navigation Link Styles */
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #a0a0c0;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+  }
+
+  .nav-link-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-link-glow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00f0ff, #ff00ff);
+    border-radius: 1px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px #00f0ff;
+  }
+
+  .nav-link:hover .nav-link-glow,
+  .nav-active .nav-link-glow {
+    width: 100%;
+  }
+
+  .nav-active {
+    color: #00f0ff !important;
+  }
+
+  /* Admin Nav Links */
+  .nav-link-admin {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #ff00ff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-link-admin:hover {
+    background: rgba(255, 0, 255, 0.1);
+    color: #ff66ff;
+  }
+
+  .nav-active-admin {
+    background: rgba(255, 0, 255, 0.15) !important;
+    color: #ff66ff !important;
+  }
+
+  /* Action Button */
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #a0a0c0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .action-btn:hover {
+    color: #00f0ff;
+    background: rgba(0, 240, 255, 0.1);
+    border-color: rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  }
+
+  /* Dropdown Item */
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #a0a0c0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-item:hover {
+    color: #ffffff;
+    background: rgba(0, 240, 255, 0.1);
+  }
+
+  /* Mobile Nav Items */
+  .mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a0a0c0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-nav-item:hover {
+    color: #00f0ff;
+    background: rgba(0, 240, 255, 0.1);
+  }
+
+  .mobile-nav-item-admin {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ff00ff;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-nav-item-admin:hover {
+    color: #ff66ff;
+    background: rgba(255, 0, 255, 0.1);
+  }
+</style>
