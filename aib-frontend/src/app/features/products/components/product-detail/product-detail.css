@@ -1,0 +1,21 @@
+/* styles.css ou dans ton fichier global */
+.custom-toast .toast-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.custom-toast img {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.custom-toast .toast-title {
+  font-weight: bold;
+  color: #1d4ed8;
+}
+
+.custom-toast .toast-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}

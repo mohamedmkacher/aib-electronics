@@ -1,0 +1,497 @@
+<!-- product-list.component.html - CYBER-TECH REDESIGN -->
+<div class="min-h-screen pb-20">
+
+  <!-- Page Header with Animated Background -->
+  <section class="relative py-12 lg:py-16 overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-[#00f0ff]/10 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-[#ff00ff]/10 rounded-full blur-[100px]"></div>
+    </div>
+
+    <div class="relative z-10 container mx-auto px-4">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <div>
+          <span class="inline-block text-sm font-['Orbitron'] font-semibold tracking-[0.2em] uppercase
+                       text-[#00f0ff] mb-3 opacity-0 animate-slide-right">
+            Discover
+          </span>
+          <h1 class="text-4xl lg:text-5xl font-['Orbitron'] font-bold text-white
+                     opacity-0 animate-slide-up delay-100">
+            Our <span class="text-gradient">Products</span>
+          </h1>
+          <p class="mt-3 text-[#a0a0c0] text-lg max-w-xl
+                    opacity-0 animate-slide-up delay-200">
+            Explore our curated collection of premium electronics
+          </p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="flex items-center gap-6 opacity-0 animate-slide-left delay-300">
+          <div class="text-center">
+            <span class="block text-2xl font-['Orbitron'] font-bold text-[#00f0ff]">
+              {{ products.length }}
+            </span>
+            <span class="text-xs text-[#6b6b8a] uppercase tracking-wider">Products</span>
+          </div>
+          <div class="h-10 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+          <div class="text-center">
+            <span class="block text-2xl font-['Orbitron'] font-bold text-[#ff00ff]">
+              {{ categories.length }}
+            </span>
+            <span class="text-xs text-[#6b6b8a] uppercase tracking-wider">Categories</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <!-- ============================================
+           FILTERS SIDEBAR
+           ============================================ -->
+      <aside class="w-full lg:w-72 flex-shrink-0">
+        <div class="sticky top-24 glass-card p-6 rounded-2xl
+                    opacity-0 animate-slide-right delay-200">
+
+          <!-- Filter Header -->
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-['Orbitron'] font-bold text-lg text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+              </svg>
+              Filters
+            </h2>
+            <button (click)="clearFilters()"
+                    class="text-xs text-[#ff00ff] hover:text-[#ff66ff] transition-colors
+                           font-semibold uppercase tracking-wider">
+              Clear All
+            </button>
+          </div>
+
+          <!-- Categories Filter -->
+          <div class="filter-group">
+            <label class="filter-label">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+              </svg>
+              Category
+            </label>
+            <select [(ngModel)]="searchRequest.categoryId"
+                    (ngModelChange)="onCategoryChange($event)"
+                    class="cyber-select">
+              <option [ngValue]="undefined">All Categories</option>
+              @for (category of categories; track category.id) {
+                <option [value]="category.id">
+                  {{ category.name }} ({{ category.productCount }})
+                </option>
+              }
+            </select>
+          </div>
+
+          <!-- Brands Filter -->
+          <div class="filter-group">
+            <label class="filter-label">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+              Brand
+            </label>
+            <select [(ngModel)]="searchRequest.brand"
+                    (ngModelChange)="onBrandChange($event)"
+                    class="cyber-select">
+              <option [ngValue]="undefined">All Brands</option>
+              @for (brand of brands; track brand) {
+                <option [value]="brand">{{ brand }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="filter-group">
+            <label class="filter-label">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Price Range
+            </label>
+            <div class="space-y-4 mt-3">
+              <!-- Min Price -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-xs">
+                  <span class="text-[#6b6b8a]">Min</span>
+                  <span class="text-[#00f0ff] font-mono">{{ minPrice | currency:'TND' }}</span>
+                </div>
+                <input type="range"
+                       [(ngModel)]="minPrice"
+                       [min]="0"
+                       [max]="maxPrice"
+                       (change)="onPriceRangeChange()"
+                       class="price-slider">
+              </div>
+              <!-- Max Price -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-xs">
+                  <span class="text-[#6b6b8a]">Max</span>
+                  <span class="text-[#ff00ff] font-mono">{{ maxPrice | currency:'TND' }}</span>
+                </div>
+                <input type="range"
+                       [(ngModel)]="maxPrice"
+                       [min]="minPrice"
+                       [max]="10000"
+                       (change)="onPriceRangeChange()"
+                       class="price-slider price-slider-max">
+              </div>
+            </div>
+          </div>
+
+          <!-- Toggle Filters -->
+          <div class="filter-group space-y-3">
+            <label class="cyber-checkbox">
+              <input type="checkbox"
+                     [(ngModel)]="searchRequest.inStock"
+                     (change)="searchProducts()">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">
+                <span class="w-2 h-2 rounded-full bg-[#00ff88] shadow-[0_0_8px_#00ff88]"></span>
+                In Stock Only
+              </span>
+            </label>
+
+            <label class="cyber-checkbox">
+              <input type="checkbox"
+                     [(ngModel)]="searchRequest.hasDiscount"
+                     (change)="searchProducts()">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">
+                <span class="w-2 h-2 rounded-full bg-[#ff0055] shadow-[0_0_8px_#ff0055]"></span>
+                On Sale
+              </span>
+            </label>
+          </div>
+
+          <!-- Clear Filters Button -->
+          <button (click)="clearFilters()"
+                  class="w-full mt-6 py-3 px-4
+                         font-['Orbitron'] font-semibold text-sm uppercase tracking-wider
+                         text-[#a0a0c0] hover:text-white
+                         bg-white/5 hover:bg-white/10
+                         border border-white/10 hover:border-white/20
+                         rounded-xl transition-all duration-300">
+            Reset Filters
+          </button>
+        </div>
+      </aside>
+
+      <!-- ============================================
+           PRODUCTS GRID
+           ============================================ -->
+      <main class="flex-1">
+
+        <!-- Sort Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8
+                    opacity-0 animate-slide-up delay-300">
+          <p class="text-[#a0a0c0]">
+            Showing <span class="text-white font-semibold">{{ products.length }}</span> products
+          </p>
+
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-[#6b6b8a]">Sort by</span>
+            <select [(ngModel)]="searchRequest.sortBy"
+                    (ngModelChange)="onSortChange($event)"
+                    class="cyber-select !py-2 !pl-4 !pr-10 text-sm">
+              <option value="createdAt">Newest</option>
+              <option value="price">Price: Low to High</option>
+              <option value="name">Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        @if (loading) {
+          <div class="flex flex-col items-center justify-center py-20">
+            <div class="cyber-spinner mb-6"></div>
+            <p class="text-[#a0a0c0] font-['Orbitron'] animate-pulse">Loading products...</p>
+          </div>
+        }
+
+        <!-- Products Grid -->
+        @if (!loading && products.length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            @for (product of products; track product.id; let i = $index) {
+              <div class="cyber-card group relative opacity-0 animate-scale-in" [style.animation-delay]="(i * 50) + 'ms'"
+                   [class.grayscale]="!product.inStock" [class.opacity-60]="!product.inStock">
+                <!-- Clickable Overlay Link -->
+                <a [routerLink]="['/products', product.slug]" class="absolute inset-0 z-10"></a>
+
+                <!-- Product Image Container -->
+                <div class="relative aspect-[4/3] overflow-hidden">
+                  <img [src]="product.mainImageUrl || 'assets/images/placeholder.jpg'"
+                       [alt]="product.name"
+                       class="w-full h-full object-cover transition-transform duration-700
+                              group-hover:scale-110">
+                  <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent
+                              opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                  <div class="absolute top-4 left-4 flex flex-col gap-2">
+                    @if (product.hasDiscount) {
+                      <span class="badge badge-discount">
+                        -{{ product.discountPercentage }}%
+                      </span>
+                    }
+                    @if (product.isFeatured) {
+                      <span class="badge badge-featured">
+                        ★ Featured
+                      </span>
+                    }
+                  </div>
+                </div>
+
+                <!-- Quick Add Button -->
+                @if (!isAdmin()) {
+                  <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100
+                              transform translate-y-4 group-hover:translate-y-0
+                              transition-all duration-300 z-20 relative">
+                    <button (click)="addToCart(product); $event.stopPropagation(); $event.preventDefault()"
+                            [disabled]="!product.inStock"
+                            class="w-12 h-12 rounded-xl
+                                   bg-gradient-to-br from-[#00f0ff] to-[#ff00ff]
+                                   flex items-center justify-center
+                                   shadow-[0_0_20px_rgba(0,240,255,0.5)]
+                                   hover:shadow-[0_0_30px_rgba(0,240,255,0.7)]
+                                   transition-shadow disabled:opacity-50 disabled:cursor-not-allowed">
+                      <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                      </svg>
+                    </button>
+                  </div>
+                }
+
+                <!-- Product Info -->
+                <div class="p-5 relative z-20">
+                  <span class="text-xs font-semibold uppercase tracking-wider text-[#ff00ff]">
+                    {{ product.brand }}
+                  </span>
+                  <h3 class="mt-2 font-['Orbitron'] font-semibold text-white text-lg
+                             line-clamp-2 group-hover:text-[#00f0ff] transition-colors">
+                    {{ product.name }}
+                  </h3>
+                  <div class="flex items-baseline gap-3 mt-4">
+                    <span class="price-current">{{ product.currentPrice | currency:'TND' }}</span>
+                    @if (product.hasDiscount) {
+                      <span class="price-original">{{ product.price | currency:'TND' }}</span>
+                    }
+                  </div>
+                  <div class="mt-4 flex items-center gap-2">
+                    @if (product.inStock) {
+                      <span class="w-2 h-2 rounded-full bg-[#00ff88] shadow-[0_0_8px_#00ff88]"></span>
+                      <span class="text-xs text-[#00ff88]">In Stock ({{ product.stockQuantity }})</span>
+                    } @else {
+                      <span class="w-2 h-2 rounded-full bg-[#ff3333] shadow-[0_0_8px_#ff3333]"></span>
+                      <span class="text-xs text-[#ff3333]">Out of Stock</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- No Results -->
+        @if (!loading && products.length === 0) {
+          <div class="text-center py-20">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-full
+                        bg-gradient-to-br from-[#00f0ff]/10 to-[#ff00ff]/10
+                        flex items-center justify-center">
+              <svg class="w-12 h-12 text-[#6b6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h3 class="font-['Orbitron'] font-bold text-xl text-white mb-2">No Products Found</h3>
+            <p class="text-[#a0a0c0] mb-6">Try adjusting your filters or search criteria</p>
+            <button (click)="clearFilters()" class="btn-cyber">
+              Clear Filters
+            </button>
+          </div>
+        }
+
+        <!-- Pagination -->
+        @if (!loading && products.length > 0) {
+          <div class="flex justify-center items-center gap-3 mt-12">
+            <button [disabled]="!hasPrevious"
+                    (click)="onPageChange(currentPage - 1)"
+                    class="pagination-btn">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              <span class="hidden sm:inline">Previous</span>
+            </button>
+
+            <div class="flex items-center gap-2 px-4">
+              <span class="text-[#6b6b8a]">Page</span>
+              <span class="font-['Orbitron'] font-bold text-[#00f0ff]">{{ currentPage + 1 }}</span>
+              <span class="text-[#6b6b8a]">of</span>
+              <span class="font-['Orbitron'] font-bold text-white">{{ totalPages }}</span>
+            </div>
+
+            <button [disabled]="!hasNext"
+                    (click)="onPageChange(currentPage + 1)"
+                    class="pagination-btn">
+              <span class="hidden sm:inline">Next</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        }
+      </main>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Filter Group */
+  .filter-group {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #a0a0c0;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Price Slider */
+  .price-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #00f0ff, #ff00ff);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #00f0ff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00f0ff;
+    transition: all 0.2s ease;
+  }
+
+  .price-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px #00f0ff;
+  }
+
+  .price-slider-max::-webkit-slider-thumb {
+    background: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff;
+  }
+
+  .price-slider-max::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 20px #ff00ff;
+  }
+
+  /* Cyber Checkbox */
+  .cyber-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .cyber-checkbox input {
+    display: none;
+  }
+
+  .checkbox-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 240, 255, 0.3);
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .cyber-checkbox:hover .checkbox-box {
+    border-color: #00f0ff;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  }
+
+  .cyber-checkbox input:checked + .checkbox-box {
+    background: linear-gradient(135deg, #00f0ff, #ff00ff);
+    border-color: transparent;
+  }
+
+  .cyber-checkbox input:checked + .checkbox-box::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #a0a0c0;
+  }
+
+  .cyber-checkbox:hover .checkbox-label {
+    color: white;
+  }
+
+  /* Pagination Button */
+  .pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #a0a0c0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+    color: #00f0ff;
+    border-color: rgba(0, 240, 255, 0.3);
+    background: rgba(0, 240, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+</style>

@@ -1,0 +1,401 @@
+<!-- product-detail.component.html - CYBER-TECH REDESIGN -->
+<div class="min-h-screen pb-20">
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="min-h-[60vh] flex flex-col items-center justify-center">
+      <div class="cyber-spinner mb-6"></div>
+      <p class="text-[#a0a0c0] font-['Orbitron'] animate-pulse">Loading product...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+      <div class="w-24 h-24 mb-6 rounded-full
+                  bg-gradient-to-br from-red-500/20 to-red-900/20
+                  flex items-center justify-center">
+        <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h2 class="font-['Orbitron'] font-bold text-2xl text-white mb-2">Product Not Found</h2>
+      <p class="text-[#a0a0c0] mb-6">{{ error }}</p>
+      <a routerLink="/products" class="btn-cyber">
+        Back to Products
+      </a>
+    </div>
+  }
+
+  <!-- Product Detail -->
+  @if (product && !loading) {
+    <!-- Breadcrumb -->
+    <div class="container mx-auto px-4 py-6">
+      <nav class="flex items-center flex-wrap gap-2 text-sm opacity-0 animate-fade-in">
+        <a routerLink="/" class="text-[#6b6b8a] hover:text-[#00f0ff] transition-colors">Home</a>
+        <svg class="w-4 h-4 text-[#6b6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <a routerLink="/products" class="text-[#6b6b8a] hover:text-[#00f0ff] transition-colors">Products</a>
+        <svg class="w-4 h-4 text-[#6b6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <a [routerLink]="['/products']" [queryParams]="{category: product.categoryId}"
+           class="text-[#6b6b8a] hover:text-[#00f0ff] transition-colors">
+          {{ product.categoryName }}
+        </a>
+        <svg class="w-4 h-4 text-[#6b6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-white font-medium truncate max-w-[200px]">{{ product.name }}</span>
+      </nav>
+    </div>
+
+    <!-- Main Product Section -->
+    <section class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+
+        <!-- ============================================
+             PRODUCT IMAGES
+             ============================================ -->
+        <div class="opacity-0 animate-slide-right">
+          <div class="sticky top-24">
+            <!-- Main Image -->
+            <div class="relative aspect-square rounded-3xl overflow-hidden
+                        bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e]
+                        border border-white/5
+                        group"
+                 [class.grayscale]="!product.inStock">
+
+              <!-- Image -->
+              <img [src]="product.mainImageUrl || 'assets/images/placeholder.jpg'"
+                   [alt]="product.name"
+                   class="w-full h-full object-cover transition-transform duration-700
+                          group-hover:scale-105">
+
+              <!-- Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f]/60 via-transparent to-transparent"></div>
+
+              <!-- Badges -->
+              <div class="absolute top-6 left-6 flex flex-col gap-3">
+                @if (product.hasDiscount) {
+                  <span class="badge badge-discount text-sm px-4 py-2">
+                    -{{ product.discountPercentage }}% OFF
+                  </span>
+                }
+                @if (product.isFeatured) {
+                  <span class="badge badge-featured text-sm px-4 py-2">
+                    ★ Featured
+                  </span>
+                }
+                @if (!product.inStock) {
+                  <span class="badge badge-out text-sm px-4 py-2">
+                    Out of Stock
+                  </span>
+                }
+              </div>
+
+              <!-- Zoom Hint -->
+              <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-xl
+                            bg-black/50 backdrop-blur-sm text-white text-sm">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                  </svg>
+                  Hover to zoom
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+             PRODUCT INFO
+             ============================================ -->
+        <div class="opacity-0 animate-slide-left delay-100">
+
+          <!-- Brand & Category -->
+          <div class="flex items-center gap-4 mb-4">
+            @if (product.brand) {
+              <span class="text-sm font-semibold uppercase tracking-widest text-[#ff00ff]">
+                {{ product.brand }}
+              </span>
+            }
+            <span class="h-4 w-px bg-white/20"></span>
+            <a [routerLink]="['/products']" [queryParams]="{category: product.categoryId}"
+               class="text-sm text-[#6b6b8a] hover:text-[#00f0ff] transition-colors">
+              {{ product.categoryName }}
+            </a>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl lg:text-4xl xl:text-5xl font-['Orbitron'] font-bold text-white mb-4
+                     leading-tight">
+            {{ product.name }}
+          </h1>
+
+          <!-- Model -->
+          @if (product.model) {
+            <p class="text-lg text-[#a0a0c0] mb-6">
+              Model: <span class="text-white">{{ product.model }}</span>
+            </p>
+          }
+
+          <!-- Price Section -->
+          <div class="p-6 rounded-2xl bg-gradient-to-r from-[#00f0ff]/5 to-[#ff00ff]/5
+                      border border-white/5 mb-8">
+            <div class="flex items-baseline gap-4 mb-2">
+              <span class="text-4xl lg:text-5xl font-['Orbitron'] font-bold text-gradient">
+                {{ product.currentPrice | currency:'TND' }}
+              </span>
+              @if (product.hasDiscount) {
+                <span class="text-xl text-[#6b6b8a] line-through">
+                  {{ product.price | currency:'TND' }}
+                </span>
+              }
+            </div>
+            @if (product.hasDiscount && product.currentPrice) {
+              <div class="flex items-center gap-2 text-[#00ff88]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-semibold">
+                  You save: {{ (product.price - product.currentPrice) | currency:'TND' }}
+                  ({{ product.discountPercentage }}%)
+                </span>
+              </div>
+            }
+          </div>
+
+          <!-- Stock Status -->
+          <div class="flex items-center gap-3 mb-8">
+            @if (product.inStock) {
+              <span class="flex items-center gap-2 px-4 py-2 rounded-xl
+                           bg-[#00ff88]/10 border border-[#00ff88]/20">
+                <span class="w-3 h-3 rounded-full bg-[#00ff88] shadow-[0_0_10px_#00ff88] animate-pulse"></span>
+                <span class="text-[#00ff88] font-semibold">In Stock</span>
+                <span class="text-[#6b6b8a]">({{ product.stockQuantity }} available)</span>
+              </span>
+            } @else {
+              <span class="flex items-center gap-2 px-4 py-2 rounded-xl
+                           bg-[#ff3333]/10 border border-[#ff3333]/20">
+                <span class="w-3 h-3 rounded-full bg-[#ff3333] shadow-[0_0_10px_#ff3333]"></span>
+                <span class="text-[#ff3333] font-semibold">Out of Stock</span>
+              </span>
+            }
+          </div>
+
+          <!-- SKU -->
+          <div class="text-sm text-[#6b6b8a] mb-8">
+            SKU: <span class="font-mono text-[#a0a0c0]">{{ product.sku }}</span>
+          </div>
+
+          <!-- Quantity & Add to Cart -->
+          @if (!isAdmin()) {
+            @if (product.inStock) {
+              <div class="space-y-6 mb-10">
+                <!-- Quantity Selector -->
+                <div>
+                  <label class="block text-sm font-semibold text-[#a0a0c0] uppercase tracking-wider mb-3">
+                    Quantity
+                  </label>
+                  <div class="qty-selector inline-flex">
+                    <button (click)="decreaseQuantity()"
+                            [disabled]="quantity <= 1"
+                            class="qty-btn">−</button>
+                    <span class="qty-value">{{ quantity }}</span>
+                    <button (click)="increaseQuantity()"
+                            [disabled]="quantity >= product.stockQuantity"
+                            class="qty-btn">+</button>
+                  </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button (click)="addToCart()"
+                        class="w-full btn-cyber text-lg !py-5 group">
+                  <svg class="w-6 h-6 transition-transform group-hover:scale-110"
+                       fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  </svg>
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            } @else {
+              <button disabled
+                      class="w-full py-5 px-8 rounded-xl
+                             bg-[#2d2d4a] text-[#6b6b8a]
+                             font-['Orbitron'] font-semibold text-lg
+                             cursor-not-allowed mb-10">
+                Out of Stock
+              </button>
+            }
+          }
+
+          <!-- Product Meta -->
+          <div class="grid grid-cols-1 gap-4 p-6 rounded-2xl
+                      bg-white/3 border border-white/5">
+
+            <div class="text-center ">
+              <svg class="w-8 h-8 mx-auto mb-2 text-[#ff00ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <span class="block text-xs text-[#6b6b8a] uppercase tracking-wider">Warranty</span>
+              <span class="text-sm text-white">2 Years Coverage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         PRODUCT DETAILS TABS
+         ============================================ -->
+    <section class="container mx-auto px-4 mt-16 lg:mt-24">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- Description -->
+        <div class="glass-card p-8 rounded-2xl opacity-0 animate-slide-up delay-200">
+          <h2 class="flex items-center gap-3 font-['Orbitron'] font-bold text-xl text-white mb-6">
+            <svg class="w-6 h-6 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Product Description
+          </h2>
+          <div class="prose prose-invert max-w-none">
+            <p class="text-[#a0a0c0] leading-relaxed whitespace-pre-line">
+              {{ product.description }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="glass-card p-8 rounded-2xl opacity-0 animate-slide-up delay-300">
+          <h2 class="flex items-center gap-3 font-['Orbitron'] font-bold text-xl text-white mb-6">
+            <svg class="w-6 h-6 text-[#ff00ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+            </svg>
+            Specifications
+          </h2>
+          <div class="space-y-4">
+            <div class="spec-row">
+              <span class="spec-label">Brand</span>
+              <span class="spec-value">{{ product.brand || 'N/A' }}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Model</span>
+              <span class="spec-value">{{ product.model || 'N/A' }}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">SKU</span>
+              <span class="spec-value font-mono">{{ product.sku }}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Category</span>
+              <span class="spec-value">{{ product.categoryName }}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Stock</span>
+              <span class="spec-value">{{ product.stockQuantity }} units</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         RELATED PRODUCTS
+         ============================================ -->
+    @if (relatedProducts.length > 0) {
+      <section class="container mx-auto px-4 mt-16 lg:mt-24">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="font-['Orbitron'] font-bold text-2xl lg:text-3xl text-white">
+            Related <span class="text-gradient">Products</span>
+          </h2>
+          <a routerLink="/products" [queryParams]="{category: product.categoryId}"
+             class="flex items-center gap-2 text-[#00f0ff] hover:text-[#00d4e6] transition-colors">
+            <span class="text-sm font-semibold uppercase tracking-wider">View All</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          @for (relatedProduct of relatedProducts; track relatedProduct.id; let i = $index) {
+            <a [routerLink]="['/products', relatedProduct.slug]"
+               class="cyber-card group opacity-0 animate-scale-in"
+               [style.animation-delay]="(i * 100) + 'ms'">
+
+              <!-- Image -->
+              <div class="relative aspect-square overflow-hidden">
+                <img [src]="relatedProduct.mainImageUrl || 'assets/images/placeholder.jpg'"
+                     [alt]="relatedProduct.name"
+                     class="w-full h-full object-cover transition-transform duration-500
+                            group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent
+                            opacity-60"></div>
+
+                @if (relatedProduct.hasDiscount) {
+                  <span class="absolute top-3 left-3 badge badge-discount text-xs">
+                    -{{ relatedProduct.discountPercentage }}%
+                  </span>
+                }
+              </div>
+
+              <!-- Info -->
+              <div class="p-4">
+                <h3 class="font-medium text-white line-clamp-2 mb-2
+                           group-hover:text-[#00f0ff] transition-colors">
+                  {{ relatedProduct.name }}
+                </h3>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-lg font-['Orbitron'] font-bold text-gradient">
+                    {{ relatedProduct.currentPrice | currency:'TND' }}
+                  </span>
+                  @if (relatedProduct.hasDiscount) {
+                    <span class="text-sm text-[#6b6b8a] line-through">
+                      {{ relatedProduct.price | currency:'TND' }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>
+
+<style>
+  /* Specification Row */
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .spec-row:last-child {
+    border-bottom: none;
+  }
+
+  .spec-label {
+    color: #6b6b8a;
+    font-size: 0.9rem;
+  }
+
+  .spec-value {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+</style>
