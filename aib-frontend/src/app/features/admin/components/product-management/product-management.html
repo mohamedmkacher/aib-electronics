@@ -1,0 +1,386 @@
+<!-- product-management.component.html - CYBER-TECH ADMIN REDESIGN -->
+<div class="min-h-screen py-8 lg:py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl lg:text-4xl font-['Orbitron'] font-bold text-white mb-2">
+          Product <span class="text-gradient">Management</span>
+        </h1>
+        <p class="text-[#a0a0c0]">Manage your store's product inventory</p>
+      </div>
+
+      <button (click)="openCreateModal()"
+              class="btn-cyber inline-flex items-center gap-2 self-start">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        <span>Add Product</span>
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="glass-card p-4 text-center">
+        <p class="text-2xl font-['Orbitron'] font-bold text-[#00f0ff]">{{ totalProducts }}</p>
+        <p class="text-[#6b6b8a] text-sm">Total Products</p>
+      </div>
+      <div class="glass-card p-4 text-center">
+        <p class="text-2xl font-['Orbitron'] font-bold text-[#00ff88]">{{ activeProducts }}</p>
+        <p class="text-[#6b6b8a] text-sm">Active</p>
+      </div>
+      <div class="glass-card p-4 text-center">
+        <p class="text-2xl font-['Orbitron'] font-bold text-yellow-400">{{ lowStockProducts }}</p>
+        <p class="text-[#6b6b8a] text-sm">Low Stock</p>
+      </div>
+      <div class="glass-card p-4 text-center">
+        <p class="text-2xl font-['Orbitron'] font-bold text-red-400">{{ outOfStockProducts }}</p>
+        <p class="text-[#6b6b8a] text-sm">Out of Stock</p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    @if (error) {
+      <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm animate-shake flex items-center gap-3">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>{{ error }}</span>
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (successMessage) {
+      <div class="mb-6 p-4 rounded-xl bg-[#00ff88]/10 border border-[#00ff88]/30 text-[#00ff88] text-sm animate-slide-down flex items-center gap-3">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    <!-- Filters & Search -->
+    <div class="glass-card p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Search -->
+        <div class="md:col-span-2 relative">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-[#6b6b8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input type="text"
+                 [(ngModel)]="searchKeyword"
+                 (input)="onFilterChange()"
+                 class="cyber-input pl-12"
+                 placeholder="Search products..." />
+        </div>
+
+        <!-- Category Filter -->
+        <select [(ngModel)]="selectedCategoryFilter"
+                (change)="onFilterChange()"
+                class="cyber-select">
+          <option [ngValue]="undefined">All Categories</option>
+          @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+
+        <!-- Stock Filter -->
+        <select [(ngModel)]="stockFilter"
+                (change)="onFilterChange()"
+                class="cyber-select">
+          <option value="all">All Stock Levels</option>
+          <option value="in_stock">In Stock</option>
+          <option value="low_stock">Low Stock</option>
+          <option value="out_of_stock">Out of Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="glass-card overflow-hidden">
+      @if (loading) {
+        <div class="flex justify-center items-center py-20">
+          <div class="cyber-spinner"></div>
+        </div>
+      } @else if (products.length === 0) {
+        <div class="text-center py-20">
+          <svg class="w-16 h-16 text-[#6b6b8a] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          <p class="text-[#a0a0c0]">No products found</p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+            <tr class="border-b border-white/10 bg-white/[0.02]">
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Product</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Category</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Price</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Stock</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Status</th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              @for (product of products; track product.id) {
+                <tr class="hover:bg-white/[0.02] transition-colors"
+                    [class.grayscale]="!product.active"
+                    [class.opacity-60]="!product.active">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-4">
+                      <img [src]="product.mainImageUrl || 'assets/placeholder.png'"
+                           [alt]="product.name"
+                           class="w-12 h-12 rounded-lg object-cover" />
+                      <div>
+                        <p class="text-white font-semibold">{{ product.name }}</p>
+                        <p class="text-[#6b6b8a] text-sm">SKU: {{ product.sku }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-[#a0a0c0]">{{ product.categoryName }}</td>
+                  <td class="px-6 py-4">
+                    <div>
+                      <p class="text-[#00f0ff] font-semibold">{{ product.currentPrice | currency:'TND':'symbol':'1.3-3' }}</p>
+                      @if (product.hasDiscount) {
+                        <p class="text-[#6b6b8a] text-sm line-through">{{ product.price | currency:'TND':'symbol':'1.3-3' }}</p>
+                      }
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="font-semibold"
+                          [class.text-[#00ff88]]="product.stockQuantity >= 10"
+                          [class.text-yellow-400]="product.stockQuantity > 0 && product.stockQuantity < 10"
+                          [class.text-red-400]="product.stockQuantity === 0">
+                      {{ product.stockQuantity }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <button (click)="toggleStatus(product)"
+                            class="px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer border"
+                            [class.bg-green-500/20]="product.active"
+                            [class.text-green-400]="product.active"
+                            [class.border-green-500/30]="product.active"
+                            [class.bg-red-500/20]="!product.active"
+                            [class.text-red-400]="!product.active"
+                            [class.border-red-500/30]="!product.active"
+                            [title]="product.active ? 'Click to deactivate' : 'Click to activate'">
+                      {{ product.active ? 'Active' : 'Inactive' }}
+                    </button>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center justify-end gap-2">
+                      <button (click)="openEditModal(product)"
+                              class="p-2 rounded-lg bg-[#00f0ff]/10 text-[#00f0ff] hover:bg-[#00f0ff]/20 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                      </button>
+                      <button (click)="deleteProduct(product)"
+                              class="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+          <div class="flex justify-center items-center gap-2 p-6 border-t border-white/10">
+            <button (click)="onPageChange(currentPage - 1)"
+                    [disabled]="currentPage === 0"
+                    class="p-2 rounded-lg bg-white/5 border border-white/10 text-[#a0a0c0]
+                           hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+
+            <span class="px-4 py-2 rounded-lg bg-gradient-to-r from-[#00f0ff]/20 to-[#ff00ff]/20
+                         border border-[#00f0ff]/30 text-white font-['Orbitron']">
+              {{ currentPage + 1 }} / {{ totalPages }}
+            </span>
+
+            <button (click)="onPageChange(currentPage + 1)"
+                    [disabled]="currentPage >= totalPages - 1"
+                    class="p-2 rounded-lg bg-white/5 border border-white/10 text-[#a0a0c0]
+                           hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Product Modal -->
+@if (showModal) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+    <div class="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
+      <div class="p-6 border-b border-white/10">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-['Orbitron'] font-bold text-white">
+            {{ isEditing ? 'Edit Product' : 'Add New Product' }}
+          </h2>
+          <button (click)="closeModal()"
+                  class="p-2 rounded-lg hover:bg-white/10 transition-colors text-[#a0a0c0]">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="p-6 space-y-5">
+        <!-- Error Message -->
+        @if (error) {
+          <div class="p-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-sm">
+            {{ error }}
+          </div>
+        }
+
+        <!-- Name -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-[#a0a0c0]">Product Name *</label>
+          <input type="text" formControlName="name" class="cyber-input" placeholder="Enter product name"
+                 [class.border-red-500]="productForm.get('name')?.invalid && productForm.get('name')?.touched" />
+          @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+            <p class="text-red-400 text-sm">{{ getFieldError('name') }}</p>
+          }
+        </div>
+
+        <!-- Brand & Category -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-[#a0a0c0]">Brand *</label>
+            <input type="text" formControlName="brand" class="cyber-input" placeholder="Brand name"
+                   [class.border-red-500]="productForm.get('brand')?.invalid && productForm.get('brand')?.touched" />
+            @if (productForm.get('brand')?.invalid && productForm.get('brand')?.touched) {
+              <p class="text-red-400 text-sm">{{ getFieldError('brand') }}</p>
+            }
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-[#a0a0c0]">Category *</label>
+            <select formControlName="categoryId" class="cyber-select"
+                    [class.border-red-500]="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+              <option value="">Select category</option>
+              @for (category of categories; track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+              }
+            </select>
+            @if (productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched) {
+              <p class="text-red-400 text-sm">{{ getFieldError('categoryId') }}</p>
+            }
+          </div>
+        </div>
+
+        <!-- Model -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-[#a0a0c0]">Model</label>
+          <input type="text" formControlName="model" class="cyber-input" placeholder="Product model"
+                 [class.border-red-500]="productForm.get('model')?.invalid && productForm.get('model')?.touched" />
+          @if (productForm.get('model')?.invalid && productForm.get('model')?.touched) {
+            <p class="text-red-400 text-sm">{{ getFieldError('model') }}</p>
+          }
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-[#a0a0c0]">Description</label>
+          <textarea formControlName="description" rows="3" class="cyber-input resize-none"
+                    placeholder="Product description..."
+                    [class.border-red-500]="productForm.get('description')?.invalid && productForm.get('description')?.touched"></textarea>
+          @if (productForm.get('description')?.invalid && productForm.get('description')?.touched) {
+            <p class="text-red-400 text-sm">{{ getFieldError('description') }}</p>
+          }
+        </div>
+
+        <!-- Price & Stock -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-[#a0a0c0]">Price (TND) *</label>
+            <input type="number" formControlName="price" class="cyber-input" placeholder="0.000" step="0.001"
+                   [class.border-red-500]="productForm.get('price')?.invalid && productForm.get('price')?.touched" />
+            @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+              <p class="text-red-400 text-sm">{{ getFieldError('price') }}</p>
+            }
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-[#a0a0c0]">Discount (%)</label>
+            <input type="number" formControlName="discount" class="cyber-input" placeholder="0" min="0" max="100"
+                   [class.border-red-500]="productForm.get('discount')?.invalid && productForm.get('discount')?.touched" />
+            @if (productForm.get('discount')?.invalid && productForm.get('discount')?.touched) {
+              <p class="text-red-400 text-sm">{{ getFieldError('discount') }}</p>
+            }
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-[#a0a0c0]">Stock *</label>
+            <input type="number" formControlName="stockQuantity" class="cyber-input" placeholder="0" min="0"
+                   [class.border-red-500]="productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched" />
+            @if (productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched) {
+              <p class="text-red-400 text-sm">{{ getFieldError('stockQuantity') }}</p>
+            }
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-[#a0a0c0]">Image URL</label>
+          <input type="text" formControlName="mainImageUrl" class="cyber-input" placeholder="https://..."
+                 [class.border-red-500]="productForm.get('mainImageUrl')?.invalid && productForm.get('mainImageUrl')?.touched" />
+          @if (productForm.get('mainImageUrl')?.invalid && productForm.get('mainImageUrl')?.touched) {
+            <p class="text-red-400 text-sm">{{ getFieldError('mainImageUrl') }}</p>
+          }
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" formControlName="isFeatured" class="cyber-checkbox" />
+            <span class="text-[#a0a0c0]">Featured Product</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" formControlName="active" class="cyber-checkbox" />
+            <span class="text-[#a0a0c0]">Active</span>
+          </label>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-4 pt-4">
+          <button type="button" (click)="closeModal()" class="btn-cyber-outline">
+            Cancel
+          </button>
+          <button type="submit" [disabled]="productForm.invalid || isSaving" class="btn-cyber">
+            @if (isSaving) {
+              <span class="flex items-center gap-2">
+                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Saving...
+              </span>
+            } @else {
+              {{ isEditing ? 'Update Product' : 'Add Product' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
