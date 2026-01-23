@@ -1,0 +1,442 @@
+<!-- checkout.component.html - CYBER-TECH REDESIGN -->
+<div class="min-h-screen py-8 lg:py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+
+    <!-- Page Header -->
+    <div class="mb-8 lg:mb-12">
+      <nav class="flex items-center gap-2 text-sm text-[#6b6b8a] mb-4">
+        <a routerLink="/" class="hover:text-[#00f0ff] transition-colors">Home</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <a routerLink="/cart" class="hover:text-[#00f0ff] transition-colors">Cart</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-[#00f0ff]">Checkout</span>
+      </nav>
+
+      <h1 class="text-3xl lg:text-4xl font-['Orbitron'] font-bold text-white">
+        <span class="text-gradient">Secure</span> Checkout
+      </h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Checkout Form -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- Personal Information -->
+        <div class="glass-card p-6 lg:p-8 animate-slide-up">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#00ff88] p-[2px]">
+              <div class="w-full h-full rounded-[10px] bg-[#0a0a0f] flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-xl font-['Orbitron'] font-bold text-white">Personal Information</h2>
+          </div>
+
+          <form [formGroup]="checkoutForm" class="space-y-5">
+            <!-- Name Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-[#a0a0c0]">First Name *</label>
+                <input type="text" formControlName="firstName" class="cyber-input" placeholder="John" />
+                @if (checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid) {
+                  <span class="text-red-400 text-xs">First name is required</span>
+                }
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-[#a0a0c0]">Last Name *</label>
+                <input type="text" formControlName="lastName" class="cyber-input" placeholder="Doe" />
+                @if (checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid) {
+                  <span class="text-red-400 text-xs">Last name is required</span>
+                }
+              </div>
+            </div>
+
+            <!-- Email & Phone -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-[#a0a0c0]">Email *</label>
+                <input type="email" formControlName="email" class="cyber-input" placeholder="john@example.com" />
+                @if (checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid) {
+                  <span class="text-red-400 text-xs">Valid email is required</span>
+                }
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-[#a0a0c0]">Phone *</label>
+                <input type="tel" formControlName="phone" class="cyber-input" placeholder="+216 12 345 678" />
+                @if (checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid) {
+                  <span class="text-red-400 text-xs">Phone number is required</span>
+                }
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Shipping Address Section -->
+        <div class="glass-card p-6 lg:p-8 animate-slide-up delay-100">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#00ff88] p-[2px]">
+                <div class="w-full h-full rounded-[10px] bg-[#0a0a0f] flex items-center justify-center">
+                  <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                </div>
+              </div>
+              <h2 class="text-xl font-['Orbitron'] font-bold text-white">Shipping Address</h2>
+            </div>
+
+            @if (savedAddresses.length > 0) {
+              <button (click)="toggleNewAddressForm()"
+                      class="text-sm text-[#00f0ff] hover:text-[#00d4e6] transition-colors flex items-center gap-1">
+                @if (showNewAddressForm) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                  <span>Cancel</span>
+                } @else {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  <span>Add New Address</span>
+                }
+              </button>
+            }
+          </div>
+
+          <!-- Loading State -->
+          @if (loadingAddresses) {
+            <div class="flex items-center justify-center py-8">
+              <div class="cyber-spinner"></div>
+            </div>
+          }
+
+          <!-- Saved Addresses List -->
+          @if (!loadingAddresses && savedAddresses.length > 0 && !showNewAddressForm) {
+            <div class="space-y-3">
+              @for (address of savedAddresses; track address.id) {
+                <div (click)="selectAddress(address.id!)"
+                     class="relative p-4 rounded-xl border-2 cursor-pointer transition-all
+                            {{ selectedAddressId === address.id
+                               ? 'border-[#00f0ff] bg-[#00f0ff]/5'
+                               : 'border-white/10 hover:border-white/20 bg-white/5' }}">
+
+                  <!-- Selection indicator -->
+                  <div class="absolute top-4 right-4 flex items-center gap-2">
+                    @if (address.isDefault) {
+                      <span class="px-2 py-0.5 text-xs bg-[#00ff88]/20 text-[#00ff88] rounded-full">Default</span>
+                    }
+                    @if (address.label) {
+                      <span class="px-2 py-0.5 text-xs bg-white/10 text-[#a0a0c0] rounded-full">{{ address.label }}</span>
+                    }
+                    <button (click)="deleteAddress(address.id!, $event)"
+                            class="p-1 text-[#6b6b8a] hover:text-[#ff3333] transition-colors">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <!-- Radio button -->
+                  <div class="flex items-start gap-3">
+                    <div class="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center
+                                {{ selectedAddressId === address.id ? 'border-[#00f0ff]' : 'border-white/30' }}">
+                      @if (selectedAddressId === address.id) {
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#00f0ff]"></div>
+                      }
+                    </div>
+
+                    <div class="flex-1 pr-24">
+                      <p class="font-semibold text-white">{{ address.fullName }}</p>
+                      <p class="text-sm text-[#a0a0c0] mt-1">{{ address.addressLine }}</p>
+                      <p class="text-sm text-[#a0a0c0]">{{ address.city }}, {{ address.postalCode }}</p>
+                      <p class="text-sm text-[#a0a0c0]">{{ address.country }}</p>
+                      <p class="text-sm text-[#6b6b8a] mt-1">{{ address.phone }}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- New Address Form -->
+          @if (!loadingAddresses && (showNewAddressForm || savedAddresses.length === 0)) {
+            <form [formGroup]="addressForm" class="space-y-5">
+              <!-- Full Name & Phone -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">Full Name *</label>
+                  <input type="text" formControlName="fullName" class="cyber-input" placeholder="John Doe" />
+                  @if (addressForm.get('fullName')?.touched && addressForm.get('fullName')?.invalid) {
+                    <span class="text-red-400 text-xs">Full name is required</span>
+                  }
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">Phone *</label>
+                  <input type="tel" formControlName="phone" class="cyber-input" placeholder="+216 12 345 678" />
+                  @if (addressForm.get('phone')?.touched && addressForm.get('phone')?.invalid) {
+                    <span class="text-red-400 text-xs">Phone is required</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Address Line -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-[#a0a0c0]">Street Address *</label>
+                <input type="text" formControlName="addressLine" class="cyber-input" placeholder="123 Tech Street, Apt 4B" />
+                @if (addressForm.get('addressLine')?.touched && addressForm.get('addressLine')?.invalid) {
+                  <span class="text-red-400 text-xs">Address is required</span>
+                }
+              </div>
+
+              <!-- City, Postal Code, Country -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">City *</label>
+                  <input type="text" formControlName="city" class="cyber-input" placeholder="Tunis" />
+                  @if (addressForm.get('city')?.touched && addressForm.get('city')?.invalid) {
+                    <span class="text-red-400 text-xs">City is required</span>
+                  }
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">Postal Code *</label>
+                  <input type="text" formControlName="postalCode" class="cyber-input" placeholder="1000" />
+                  @if (addressForm.get('postalCode')?.touched && addressForm.get('postalCode')?.invalid) {
+                    <span class="text-red-400 text-xs">Postal code is required</span>
+                  }
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">Country</label>
+                  <input type="text" formControlName="country" class="cyber-input" placeholder="Tunisia" />
+                </div>
+              </div>
+
+              <!-- Label & Default -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#a0a0c0]">Label</label>
+                  <select formControlName="label"
+                          class="cyber-input w-full bg-[#0a0a0f] text-white border border-white/10
+                                 focus:border-[#00f0ff] rounded-xl px-4 py-3
+                                 [&>option]:bg-[#0a0a0f] [&>option]:text-white">
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-3 pt-7">
+                  <input type="checkbox" formControlName="isDefault" id="isDefault"
+                         class="w-5 h-5 rounded border-white/20 bg-white/5 text-[#00f0ff] focus:ring-[#00f0ff]">
+                  <label for="isDefault" class="text-sm text-[#a0a0c0]">Set as default address</label>
+                </div>
+              </div>
+
+              <!-- Save Address Button (only if user has other addresses) -->
+              @if (savedAddresses.length > 0) {
+                <div class="flex justify-end pt-2">
+                  <button type="button" (click)="saveNewAddress()"
+                          class="px-4 py-2 rounded-xl bg-[#00f0ff]/10 border border-[#00f0ff]/30
+                                 text-[#00f0ff] hover:bg-[#00f0ff]/20 transition-all text-sm font-semibold">
+                    Save Address for Later
+                  </button>
+                </div>
+              }
+            </form>
+          }
+        </div>
+
+        <!-- Payment Information -->
+        <div class="glass-card p-6 lg:p-8 animate-slide-up delay-200">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ff00ff] to-[#a855f7] p-[2px]">
+              <div class="w-full h-full rounded-[10px] bg-[#0a0a0f] flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#ff00ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-xl font-['Orbitron'] font-bold text-white">Payment Method</h2>
+          </div>
+
+          <!-- Stripe Element Container -->
+          <div id="card-element" class="cyber-input !p-4 min-h-[50px]"
+               [class.border-red-500]="cardError"
+               [class.border-green-500]="cardComplete && !cardError">
+            <!-- Stripe Elements will be inserted here -->
+          </div>
+
+          <!-- Card validation feedback -->
+          @if (cardError) {
+            <div class="text-red-400 text-sm mt-2 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              {{ cardError }}
+            </div>
+          }
+          @if (cardComplete && !cardError) {
+            <div class="text-[#00ff88] text-sm mt-2 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              Card details complete
+            </div>
+          }
+
+          <!-- Security Badge -->
+          <div class="flex items-center gap-2 mt-4 text-[#6b6b8a] text-sm">
+            <svg class="w-5 h-5 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <span>Your payment information is encrypted and secure</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="lg:col-span-1">
+        <div class="glass-card p-6 lg:p-8 sticky top-24 animate-slide-left">
+          <h2 class="text-xl font-['Orbitron'] font-bold text-white mb-6">Order Summary</h2>
+
+          <!-- Cart Items -->
+          <div class="space-y-4 mb-6 max-h-64 overflow-y-auto custom-scrollbar">
+            @for (item of cartItems; track item.productId) {
+              <div class="flex gap-4 p-3 rounded-xl bg-white/5">
+                <img [src]="item.imageUrl || 'assets/placeholder.png'"
+                     [alt]="item.name"
+                     class="w-16 h-16 rounded-lg object-cover" />
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-white text-sm font-semibold truncate">{{ item.name }}</h4>
+                  <p class="text-[#6b6b8a] text-xs">Qty: {{ item.quantity }}</p>
+                  <p class="text-[#00f0ff] font-semibold">{{ item.unitPrice | currency:'TND':'symbol':'1.3-3' }}</p>
+                </div>
+              </div>
+            }
+          </div>
+
+          <hr class="border-white/10 my-6" />
+
+          <!-- Price Breakdown -->
+          <div class="space-y-3 mb-6">
+            <div class="flex justify-between text-[#a0a0c0]">
+              <span>Subtotal</span>
+              <span class="text-white">{{ subtotal | currency:'TND':'symbol':'1.3-3' }}</span>
+            </div>
+            @if (totalDiscount > 0) {
+              <div class="flex justify-between text-[#00ff88]">
+                <span>Discount</span>
+                <span>-{{ totalDiscount | currency:'TND':'symbol':'1.3-3' }}</span>
+              </div>
+            }
+            <div class="flex justify-between text-[#a0a0c0]">
+              <span>Shipping</span>
+              <span class="text-white">{{ shipping | currency:'TND':'symbol':'1.3-3' }}</span>
+            </div>
+            <div class="flex justify-between text-[#a0a0c0]">
+              <span>Tax (19%)</span>
+              <span class="text-white">{{ tax | currency:'TND':'symbol':'1.3-3' }}</span>
+            </div>
+
+            <hr class="border-white/10" />
+
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-semibold text-white">Total</span>
+              <span class="text-2xl font-['Orbitron'] font-bold text-gradient">
+                {{ total | currency:'TND':'symbol':'1.3-3' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Place Order Button -->
+          <button (click)="placeOrder()"
+                  [disabled]="!canSubmit"
+                  class="btn-cyber w-full !py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (!isProcessing) {
+              <span class="flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <span>Place Order</span>
+              </span>
+            } @else {
+              <span class="flex items-center justify-center gap-2">
+                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Processing...</span>
+              </span>
+            }
+          </button>
+
+          <!-- Validation Checklist (shown when button disabled) -->
+          @if (!canSubmit && !isProcessing) {
+            <div class="mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-sm text-[#a0a0c0] mb-2">Complete the following to place your order:</p>
+              <ul class="space-y-1 text-sm">
+                <li class="flex items-center gap-2">
+                  @if (checkoutForm.valid) {
+                    <svg class="w-4 h-4 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-[#00ff88]">Personal information</span>
+                  } @else {
+                    <svg class="w-4 h-4 text-[#ff6b6b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    <span class="text-[#ff6b6b]">Personal information</span>
+                  }
+                </li>
+                <li class="flex items-center gap-2">
+                  @if (selectedAddressId || (showNewAddressForm && addressForm.valid)) {
+                    <svg class="w-4 h-4 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-[#00ff88]">Shipping address</span>
+                  } @else {
+                    <svg class="w-4 h-4 text-[#ff6b6b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    <span class="text-[#ff6b6b]">Shipping address</span>
+                  }
+                </li>
+                <li class="flex items-center gap-2">
+                  @if (cardComplete) {
+                    <svg class="w-4 h-4 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-[#00ff88]">Payment details</span>
+                  } @else {
+                    <svg class="w-4 h-4 text-[#ff6b6b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    <span class="text-[#ff6b6b]">Payment details</span>
+                  }
+                </li>
+              </ul>
+            </div>
+          }
+
+          <!-- Back to Cart -->
+          <a routerLink="/cart"
+             class="block text-center text-[#a0a0c0] hover:text-[#00f0ff] transition-colors mt-4">
+            ← Back to Cart
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
