@@ -1,0 +1,253 @@
+<!-- order-management.html -->
+<div class="min-h-screen py-8 lg:py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-['Orbitron'] font-bold text-white mb-2">
+        Order <span class="text-gradient">Management</span>
+      </h1>
+      <p class="text-[#a0a0c0]">Track and manage customer orders</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Order Number -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Order Number</label>
+          <input type="text" [(ngModel)]="searchRequest.orderNumber" (input)="onFilterChange()"
+                 class="cyber-input" placeholder="ORD-..." />
+        </div>
+
+        <!-- Customer Name -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Customer Name</label>
+          <input type="text" [(ngModel)]="searchRequest.customerName" (input)="onFilterChange()"
+                 class="cyber-input" placeholder="Search customer..." />
+        </div>
+
+        <!-- Status -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Status</label>
+          <select [(ngModel)]="searchRequest.status" (change)="onFilterChange()" class="cyber-select">
+            <option [ngValue]="undefined">All Statuses</option>
+            @for (status of filterStatusOptions; track status) {
+              <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- City -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">City</label>
+          <input type="text" [(ngModel)]="searchRequest.city" (input)="onFilterChange()"
+                 class="cyber-input" placeholder="Filter by city..." />
+        </div>
+
+        <!-- Date Range -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Start Date</label>
+          <input type="date" [(ngModel)]="searchRequest.startDate" (change)="onFilterChange()"
+                 class="cyber-input" />
+        </div>
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">End Date</label>
+          <input type="date" [(ngModel)]="searchRequest.endDate" (change)="onFilterChange()"
+                 class="cyber-input" />
+        </div>
+
+        <!-- Price Range -->
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Min Total</label>
+          <input type="number" [(ngModel)]="searchRequest.minTotal" (input)="onFilterChange()"
+                 class="cyber-input" placeholder="0.00" />
+        </div>
+        <div class="space-y-2">
+          <label class="text-sm text-[#a0a0c0]">Max Total</label>
+          <input type="number" [(ngModel)]="searchRequest.maxTotal" (input)="onFilterChange()"
+                 class="cyber-input" placeholder="0.00" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="glass-card overflow-hidden">
+      @if (loading) {
+        <div class="flex justify-center items-center py-20">
+          <div class="cyber-spinner"></div>
+        </div>
+      } @else if (orders.length === 0) {
+        <div class="text-center py-20">
+          <p class="text-[#a0a0c0]">No orders found matching your criteria</p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+            <tr class="border-b border-white/10 bg-white/[0.02]">
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase">Order #</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase">Customer</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase">Date</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase">Total</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase">Status</th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-[#6b6b8a] uppercase">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              @for (order of orders; track order.id) {
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="px-6 py-4 text-white font-mono">{{ order.orderNumber }}</td>
+                  <td class="px-6 py-4">
+                    <div class="text-white">{{ order.user?.firstName }} {{ order.user?.lastName }}</div>
+                    <div class="text-xs text-[#6b6b8a]">{{ order.user?.email }}</div>
+                  </td>
+                  <td class="px-6 py-4 text-[#a0a0c0]">{{ formatDate(order.createdAt) }}</td>
+                  <td class="px-6 py-4 text-[#00f0ff] font-bold">
+                    {{ order.total | currency:'TND':'symbol':'1.3-3' }}
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold border"
+                          [ngClass]="getStatusBadgeClass(order.status)">
+                      {{ order.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button (click)="viewOrderDetails(order)"
+                            class="text-[#00f0ff] hover:text-white transition-colors text-sm font-semibold">
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+          <div class="flex justify-center items-center gap-4 p-6 border-t border-white/10">
+            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                    class="btn-cyber-outline !py-2 !px-4 text-sm disabled:opacity-50">
+              Previous
+            </button>
+            <span class="text-[#a0a0c0]">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+            <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= totalPages - 1"
+                    class="btn-cyber-outline !py-2 !px-4 text-sm disabled:opacity-50">
+              Next
+            </button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Order Details Modal -->
+@if (showDetailsModal && selectedOrder) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+    <div class="glass-card w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-scale-in">
+      <div class="p-6 border-b border-white/10 flex justify-between items-center">
+        <h2 class="text-xl font-['Orbitron'] font-bold text-white">
+          Order Details <span class="text-[#00f0ff]">#{{ selectedOrder.orderNumber }}</span>
+        </h2>
+        <button (click)="closeModal()" class="text-[#a0a0c0] hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column: Items -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="space-y-4">
+            <h3 class="text-white font-semibold border-b border-white/10 pb-2">Items</h3>
+            @for (item of selectedOrder.items; track item.id) {
+              <div class="flex gap-4 p-3 bg-white/5 rounded-lg">
+                <img [src]="item.product.mainImageUrl" class="w-16 h-16 object-cover rounded" />
+                <div class="flex-1">
+                  <p class="text-white font-medium">{{ item.product.name }}</p>
+                  <p class="text-sm text-[#a0a0c0]">Qty: {{ item.quantity }} x {{ item.unitPrice | currency:'TND':'symbol':'1.3-3' }}</p>
+                </div>
+                <div class="text-[#00f0ff] font-bold">
+                  {{ item.totalPrice | currency:'TND':'symbol':'1.3-3' }}
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Status Management -->
+          <div class="p-4 border border-white/10 rounded-xl bg-white/[0.02]">
+            <h3 class="text-white font-semibold mb-4">Update Status</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (status of updateStatusOptions; track status) {
+                <button (click)="updateStatus(status)"
+                        [disabled]="selectedOrder.status === status || selectedOrder.status === 'CANCELLED' || selectedOrder.status === 'DELIVERED'"
+                        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all border"
+                        [ngClass]="{
+                          'bg-[#00f0ff]/20 border-[#00f0ff] text-[#00f0ff]': selectedOrder.status === status,
+                          'border-white/10 text-[#a0a0c0] hover:bg-white/10': selectedOrder.status !== status,
+                          'opacity-50 cursor-not-allowed': selectedOrder.status === 'CANCELLED' || selectedOrder.status === 'DELIVERED'
+                        }">
+                  {{ status }}
+                </button>
+              }
+            </div>
+            <p class="text-xs text-[#6b6b8a] mt-2">
+              Updating status will send an email notification to the customer.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column: Info -->
+        <div class="space-y-6">
+          <!-- Customer -->
+          <div>
+            <h3 class="text-white font-semibold border-b border-white/10 pb-2 mb-3">Customer</h3>
+            <p class="text-[#a0a0c0]">{{ selectedOrder.user?.firstName }} {{ selectedOrder.user?.lastName }}</p>
+            <p class="text-[#6b6b8a] text-sm">{{ selectedOrder.user?.email }}</p>
+          </div>
+
+          <!-- Shipping -->
+          <div>
+            <h3 class="text-white font-semibold border-b border-white/10 pb-2 mb-3">Shipping</h3>
+            <p class="text-[#a0a0c0]">{{ selectedOrder.shippingName }}</p>
+            <p class="text-[#6b6b8a] text-sm">{{ selectedOrder.shippingFullAddress }}</p>
+            <p class="text-[#6b6b8a] text-sm">{{ selectedOrder.shippingPhone }}</p>
+          </div>
+
+          <!-- Payment -->
+          <div>
+            <h3 class="text-white font-semibold border-b border-white/10 pb-2 mb-3">Payment</h3>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-[#a0a0c0]">Status:</span>
+              <span class="text-white">{{ selectedOrder.paymentStatus }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-[#a0a0c0]">Total:</span>
+              <span class="text-[#00f0ff] font-bold">{{ selectedOrder.total | currency:'TND':'symbol':'1.3-3' }}</span>
+            </div>
+          </div>
+
+          <!-- Cancellation Info -->
+          @if (selectedOrder.status === 'CANCELLED') {
+            <div>
+              <h3 class="text-red-400 font-semibold border-b border-red-500/30 pb-2 mb-3">Cancellation Details</h3>
+              @if (selectedOrder.cancelledAt) {
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-[#a0a0c0]">Date:</span>
+                  <span class="text-white">{{ formatDate(selectedOrder.cancelledAt) }}</span>
+                </div>
+              }
+              @if (selectedOrder.cancellationReason) {
+                <div class="flex justify-between text-sm">
+                  <span class="text-[#a0a0c0]">Reason:</span>
+                  <span class="text-white">{{ selectedOrder.cancellationReason }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
