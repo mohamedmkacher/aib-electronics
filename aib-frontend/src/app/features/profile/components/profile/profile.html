@@ -1,0 +1,90 @@
+<!-- profile.component.html -->
+<div class="min-h-screen py-8 lg:py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-8 lg:mb-12">
+      <h1 class="text-3xl lg:text-4xl font-['Orbitron'] font-bold text-white mb-2">
+        My <span class="text-gradient">Profile</span>
+      </h1>
+      <p class="text-[#a0a0c0]">Manage your account settings and preferences</p>
+    </div>
+
+    @if (!user) {
+      <div class="flex flex-col items-center justify-center py-20">
+        <div class="cyber-spinner mb-4"></div>
+        <p class="text-[#a0a0c0]">Loading profile...</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-1">
+          <div class="glass-card p-4 sticky top-24">
+            <!-- User Brief -->
+            <div class="flex items-center gap-3 mb-6 px-2">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#ff00ff] p-[1px]">
+                <div class="w-full h-full rounded-[11px] bg-[#0a0a0f] flex items-center justify-center font-['Orbitron'] font-bold text-lg text-white">
+                  {{ user.firstName.charAt(0) }}
+                </div>
+              </div>
+              <div class="overflow-hidden">
+                <p class="text-white font-semibold truncate">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="text-xs text-[#a0a0c0] truncate">{{ user.email }}</p>
+              </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1">
+              <button (click)="setActiveTab('info')" [ngClass]="getTabClasses('info')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Personal Info
+              </button>
+
+              <button (click)="setActiveTab('addresses')" [ngClass]="getTabClasses('addresses')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Addresses</button>
+
+
+              <button (click)="setActiveTab('orders')" [ngClass]="getTabClasses('orders')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+                Recent Orders
+              </button>
+
+              @if (hasPassword()) {
+                <button (click)="setActiveTab('security')" [ngClass]="getTabClasses('security')">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  Security
+                </button>
+              }
+            </nav>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3">
+          <div class="glass-card p-6 lg:p-8 animate-fade-in">
+            @if (activeTab === 'info') {
+              <app-profile-info [user]="user"></app-profile-info>
+            } @else if (activeTab === 'addresses') {
+              <app-address-management></app-address-management>
+            } @else if (activeTab === 'orders') {
+              <app-recent-orders></app-recent-orders>
+            } @else if (activeTab === 'security' && hasPassword()) {
+              <app-change-password></app-change-password>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

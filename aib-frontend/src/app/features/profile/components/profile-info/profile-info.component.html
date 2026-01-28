@@ -1,0 +1,44 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-['Orbitron'] font-bold text-white">Personal Information</h2>
+    <button (click)="toggleEdit()" class="text-sm text-[#00f0ff] hover:text-white transition-colors">
+      {{ isEditing ? 'Cancel' : 'Edit' }}
+    </button>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-[#a0a0c0]">First Name</label>
+        <input type="text" formControlName="firstName" class="cyber-input" [class.opacity-50]="!isEditing" [readonly]="!isEditing" />
+      </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-[#a0a0c0]">Last Name</label>
+        <input type="text" formControlName="lastName" class="cyber-input" [class.opacity-50]="!isEditing" [readonly]="!isEditing" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-[#a0a0c0]">Email Address</label>
+        <input type="email" formControlName="email" class="cyber-input opacity-50 cursor-not-allowed" readonly />
+      </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-[#a0a0c0]">Phone Number</label>
+        <input type="tel" formControlName="phone" class="cyber-input" [class.opacity-50]="!isEditing" [readonly]="!isEditing" placeholder="+216..." />
+      </div>
+    </div>
+
+    @if (isEditing) {
+      <div class="flex justify-end pt-4">
+        <button type="submit" [disabled]="submitting || profileForm.invalid" class="btn-cyber">
+          @if (submitting) {
+            <span>Saving...</span>
+          } @else {
+            <span>Save Changes</span>
+          }
+        </button>
+      </div>
+    }
+  </form>
+</div>
