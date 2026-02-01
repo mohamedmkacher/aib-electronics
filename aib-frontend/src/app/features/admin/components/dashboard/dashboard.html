@@ -1,0 +1,321 @@
+<!-- dashboard.component.html - CYBER-TECH ADMIN REDESIGN -->
+<div class="min-h-screen py-8 lg:py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl lg:text-4xl font-['Orbitron'] font-bold text-white mb-2">
+          Admin <span class="text-gradient">Dashboard</span>
+        </h1>
+        <p class="text-[#a0a0c0]">Welcome back! Here's what's happening with your store.</p>
+      </div>
+
+      <button (click)="refresh()"
+              class="btn-cyber-outline inline-flex items-center gap-2 self-start">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        <span>Refresh Data</span>
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="flex flex-col items-center justify-center py-20">
+        <div class="cyber-spinner mb-4"></div>
+        <p class="text-[#a0a0c0]">Loading dashboard data...</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+      <div class="glass-card p-6 border-red-500/30 mb-8 animate-shake">
+        <div class="flex items-center gap-3 text-red-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="font-medium">{{ error }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- Dashboard Content -->
+    @if (stats && !loading) {
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+        <!-- Revenue Card -->
+        <div class="glass-card p-6 relative overflow-hidden group animate-slide-up">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-[#00ff88]/10 rounded-full blur-3xl
+                      group-hover:bg-[#00ff88]/20 transition-colors"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[#6b6b8a] text-sm font-medium uppercase tracking-wider">Revenue</span>
+              <div class="w-10 h-10 rounded-xl bg-[#00ff88]/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+            <p class="text-3xl font-['Orbitron'] font-bold text-white mb-2">
+              {{ formatCurrency(stats.kpis.totalRevenue) }}
+            </p>
+
+          </div>
+        </div>
+
+        <!-- Orders Card -->
+        <div class="glass-card p-6 relative overflow-hidden group animate-slide-up delay-100">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-[#00f0ff]/10 rounded-full blur-3xl
+                      group-hover:bg-[#00f0ff]/20 transition-colors"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[#6b6b8a] text-sm font-medium uppercase tracking-wider">Orders</span>
+              <div class="w-10 h-10 rounded-xl bg-[#00f0ff]/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+              </div>
+            </div>
+            <p class="text-3xl font-['Orbitron'] font-bold text-white mb-2">{{ stats.kpis.totalOrders }}</p>
+            <div class="flex gap-4 text-sm">
+              <span class="text-[#a0a0c0]">Today: <span class="text-[#00f0ff] font-semibold">{{ stats.kpis.ordersToday }}</span></span>
+              <span class="text-[#a0a0c0]">Month: <span class="text-[#00f0ff] font-semibold">{{ stats.kpis.ordersThisMonth }}</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Card -->
+        <div class="glass-card p-6 relative overflow-hidden group animate-slide-up delay-200">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-[#ff00ff]/10 rounded-full blur-3xl
+                      group-hover:bg-[#ff00ff]/20 transition-colors"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[#6b6b8a] text-sm font-medium uppercase tracking-wider">Products</span>
+              <div class="w-10 h-10 rounded-xl bg-[#ff00ff]/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#ff00ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+              </div>
+            </div>
+            <p class="text-3xl font-['Orbitron'] font-bold text-white mb-2">{{ stats.kpis.totalProducts }}</p>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-red-400">{{ stats.kpis.lowStockProducts }} low stock</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Card -->
+        <div class="glass-card p-6 relative overflow-hidden group animate-slide-up delay-300">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-[#a855f7]/10 rounded-full blur-3xl
+                      group-hover:bg-[#a855f7]/20 transition-colors"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[#6b6b8a] text-sm font-medium uppercase tracking-wider">Customers</span>
+              <div class="w-10 h-10 rounded-xl bg-[#a855f7]/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#a855f7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              </div>
+            </div>
+            <p class="text-3xl font-['Orbitron'] font-bold text-white mb-2">{{ stats.kpis.totalUsers }}</p>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-[#00ff88]">+{{ stats.kpis.newUsersThisMonth }} new</span>
+              <span class="text-[#6b6b8a]">this month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+        <!-- Sales Chart -->
+        <div class="glass-card p-6 animate-slide-up">
+          <h3 class="text-lg font-['Orbitron'] font-bold text-white mb-6 flex items-center gap-2">
+            <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+            Sales Overview (Last 30 Days)
+          </h3>
+
+          <div class="h-64 flex items-end justify-between gap-1">
+            @for (point of stats.salesChart; track point.date) {
+              <div class="flex-1 relative group cursor-pointer"
+                   [style.height.%]="getBarHeight(point.amount)">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#00f0ff] to-[#00ff88] rounded-t-sm
+                            opacity-70 group-hover:opacity-100 transition-opacity"></div>
+
+                <!-- Tooltip -->
+                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-10">
+                  <div class="glass-card !p-3 text-xs whitespace-nowrap">
+                    <p class="text-white font-semibold">{{ point.date }}</p>
+                    <p class="text-[#00ff88]">{{ formatCurrency(point.amount) }}</p>
+                    <p class="text-[#00f0ff]">{{ point.orderCount }} orders</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="flex justify-between mt-4 text-xs text-[#6b6b8a]">
+            <span>{{ stats.salesChart[0]?.date }}</span>
+            <span>{{ stats.salesChart[stats.salesChart.length - 1]?.date }}</span>
+          </div>
+        </div>
+
+        <!-- Orders by Status -->
+        <div class="glass-card p-6 animate-slide-up delay-100">
+          <h3 class="text-lg font-['Orbitron'] font-bold text-white mb-6 flex items-center gap-2">
+            <svg class="w-5 h-5 text-[#ff00ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            Orders by Status
+          </h3>
+
+          <div class="space-y-4">
+            @for (statusCount of stats.ordersByStatus; track statusCount.status) {
+              <div class="flex items-center justify-between p-4 rounded-xl bg-white/[0.03]
+                          border border-white/5 hover:bg-white/[0.05] transition-colors">
+                <span class="px-4 py-1.5 rounded-full text-sm font-semibold"
+                      [class]="getStatusBadgeClass(statusCount.status)">
+                  {{ getStatusLabel(statusCount.status) }}
+                </span>
+                <span class="text-2xl font-['Orbitron'] font-bold text-white">{{ statusCount.count }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Low Stock & Recent Orders -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+        <!-- Low Stock Products -->
+        <div class="glass-card overflow-hidden animate-slide-up">
+          <div class="p-6 border-b border-white/10 bg-gradient-to-r from-red-500/10 to-transparent">
+            <h3 class="text-lg font-['Orbitron'] font-bold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+              Low Stock Alert
+            </h3>
+          </div>
+
+          <div class="divide-y divide-white/5">
+            @for (product of stats.lowStockProducts; track product.id) {
+              <div class="p-4 hover:bg-white/[0.02] transition-colors">
+                <div class="flex items-center gap-4">
+                  <img [src]="product.imageUrl || 'assets/placeholder.png'"
+                       [alt]="product.name"
+                       class="w-14 h-14 rounded-lg object-cover" />
+                  <div class="flex-1 min-w-0">
+                    <p class="text-white font-semibold truncate">{{ product.name }}</p>
+                    <p class="text-[#6b6b8a] text-sm">{{ product.category }}</p>
+                  </div>
+                  <span class="px-3 py-1 rounded-full text-sm font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                    {{ product.stock }} left
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="glass-card overflow-hidden animate-slide-up delay-100">
+          <div class="p-6 border-b border-white/10 bg-gradient-to-r from-[#00ff88]/10 to-transparent">
+            <h3 class="text-lg font-['Orbitron'] font-bold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              Best Selling Products
+            </h3>
+          </div>
+
+          <div class="divide-y divide-white/5">
+            @for (product of stats.topProducts; track product.id; let i = $index) {
+              <div class="p-4 hover:bg-white/[0.02] transition-colors">
+                <div class="flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#00f0ff] to-[#ff00ff]
+                              flex items-center justify-center flex-shrink-0">
+                    <span class="text-[#0a0a0f] font-bold text-sm">{{ i + 1 }}</span>
+                  </div>
+                  <img [src]="product.imageUrl || 'assets/placeholder.png'"
+                       [alt]="product.name"
+                       class="w-14 h-14 rounded-lg object-cover" />
+                  <div class="flex-1 min-w-0">
+                    <p class="text-white font-semibold truncate">{{ product.name }}</p>
+                    <p class="text-[#6b6b8a] text-sm">{{ product.totalSold }} sold</p>
+                  </div>
+                  <span class="text-[#00ff88] font-['Orbitron'] font-bold">
+                    {{ formatCurrency(product.revenue) }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="glass-card overflow-hidden animate-slide-up">
+        <div class="p-6 border-b border-white/10 bg-gradient-to-r from-[#00f0ff]/10 to-transparent">
+          <h3 class="text-lg font-['Orbitron'] font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            Recent Orders
+          </h3>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+            <tr class="border-b border-white/10">
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Order #</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Customer</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Total</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Status</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-[#6b6b8a] uppercase tracking-wider">Date</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              @for (order of stats.recentOrders; track order.orderId) {
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-[#00f0ff] font-['Orbitron'] font-semibold">#{{ order.orderNumber }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-white">{{ order.customerName }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-[#00ff88] font-semibold">
+                    {{ formatCurrency(order.total) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                          [class]="getStatusBadgeClass(order.status)">
+                      {{ getStatusLabel(order.status) }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-[#a0a0c0]">{{ formatDate(order.createdAt) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>
