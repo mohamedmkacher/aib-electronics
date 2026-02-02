@@ -1,0 +1,397 @@
+<!-- home.component.html - CYBER-TECH REDESIGN -->
+<div class="min-h-screen overflow-hidden">
+
+  <!-- ============================================
+       HERO SECTION - Immersive 3D Feel
+       ============================================ -->
+  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+      <!-- Grid Pattern -->
+      <div class="absolute inset-0 opacity-20"
+           style="background-image:
+             linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+           background-size: 60px 60px;
+           transform: perspective(500px) rotateX(60deg);
+           transform-origin: center top;">
+      </div>
+
+      <!-- Floating Orbs -->
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00f0ff]/20 rounded-full blur-[100px] animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#ff00ff]/20 rounded-full blur-[100px] animate-float delay-500"></div>
+      <div class="absolute top-1/2 right-1/3 w-64 h-64 bg-[#a855f7]/20 rounded-full blur-[80px] animate-float delay-300"></div>
+
+      <!-- Animated Lines -->
+      <svg class="absolute inset-0 w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:0" />
+            <stop offset="50%" style="stop-color:#00f0ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ff00ff;stop-opacity:0" />
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="30%" x2="100%" y2="30%" stroke="url(#lineGrad)" stroke-width="1" class="animate-shimmer"/>
+        <line x1="0" y1="70%" x2="100%" y2="70%" stroke="url(#lineGrad)" stroke-width="1" class="animate-shimmer delay-500"/>
+      </svg>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 container mx-auto px-4 text-center">
+
+      <!-- Glitch Title Effect -->
+      <div class="mb-6 opacity-0 animate-slide-up">
+        <span class="inline-block px-4 py-2 text-sm font-['Orbitron'] font-semibold tracking-[0.3em] uppercase
+                     text-[#00f0ff] border border-[#00f0ff]/30 rounded-full
+                     bg-[#00f0ff]/5 backdrop-blur-sm
+                     shadow-[0_0_20px_rgba(0,240,255,0.2)]">
+          ⚡ The Future of Electronics
+        </span>
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-['Orbitron'] font-black mb-8
+                 opacity-0 animate-slide-up delay-100">
+        <span class="block text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+          WELCOME TO
+        </span>
+        <span class="relative inline-block mt-2">
+          <span class="text-gradient animate-text-glow">AIB Electronics</span>
+          <!-- Glitch layers -->
+          <span class="absolute inset-0 text-[#ff00ff] opacity-0 hover:opacity-70
+                       transform translate-x-[2px] translate-y-[-2px]
+                       transition-opacity duration-100" aria-hidden="true">
+            AIB Electronics
+          </span>
+        </span>
+      </h1>
+
+      <p class="max-w-2xl mx-auto text-lg sm:text-xl md:text-2xl text-[#a0a0c0] mb-12
+                leading-relaxed opacity-0 animate-slide-up delay-200">
+        Discover cutting-edge electronics.
+        <span class="text-[#00f0ff]">Experience tomorrow's technology today.</span>
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center
+                  opacity-0 animate-slide-up delay-300">
+        <a routerLink="/products" class="btn-cyber group text-lg !px-10 !py-4">
+          <span>Explore Products</span>
+          <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <a routerLink="/categories" class="btn-cyber-outline group text-lg !px-10 !py-4">
+          <span>Browse Categories</span>
+          <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Scroll Indicator -->
+      </div>
+  </section>
+
+  <!-- ============================================
+       FEATURED PRODUCTS SECTION
+       ============================================ -->
+  @if (featuredProducts.length > 0) {
+    <section class="relative py-24">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+
+          <h2 class="text-4xl sm:text-5xl font-['Orbitron'] font-bold text-white mb-6">
+            Featured <span class="text-gradient">Products</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          @for (product of featuredProducts; track product.id) {
+            <div class="glass-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2">
+              <!-- Image -->
+              <div class="relative h-64 overflow-hidden">
+                <img [src]="product.mainImageUrl || 'assets/placeholder.png'"
+                     [alt]="product.name"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                  @if (!isAdmin()) {
+                    <button (click)="addToCart(product)"
+                            class="p-3 bg-[#00f0ff] text-black rounded-full hover:bg-white transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                      </svg>
+                    </button>
+                  }
+                  <a [routerLink]="['/products', product.slug]"
+                     class="p-3 bg-white text-black rounded-full hover:bg-[#ff00ff] hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300 delay-75">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </a>
+                </div>
+
+                @if (product.hasDiscount) {
+                  <div class="absolute top-4 left-4 bg-[#ff00ff] text-white text-xs font-bold px-3 py-1 rounded-full">
+                    -{{ product.discountPercentage }}%
+                  </div>
+                }
+              </div>
+
+              <!-- Content -->
+              <div class="p-6">
+                <p class="text-[#a0a0c0] text-sm mb-2">{{ product.categoryName }}</p>
+                <h3 class="text-white font-['Orbitron'] font-bold text-lg mb-2 truncate">{{ product.name }}</h3>
+                <div class="flex items-center justify-between">
+                  <div class="flex flex-col">
+                    @if (product.hasDiscount) {
+                      <span class="text-[#6b6b8a] text-sm line-through">{{ product.price.toFixed(3) }} TND</span>
+                      <span class="text-[#00f0ff] font-bold text-xl">{{ product.currentPrice?.toFixed(3) }} TND</span>
+                    } @else {
+                      <span class="text-[#00f0ff] font-bold text-xl">{{ product.price.toFixed(3) }} TND</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ============================================
+     CATEGORIES SECTION
+     ============================================ -->
+  @if (categories.length > 0) {
+    <section class="relative py-24 bg-[#0a0a0f]/50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <span class="inline-block text-sm font-['Orbitron'] font-semibold tracking-[0.2em] uppercase
+                       text-[#ff00ff] mb-4">
+            Browse Collections
+          </span>
+          <h2 class="text-4xl sm:text-5xl font-['Orbitron'] font-bold text-white mb-6">
+            Top <span class="text-gradient">Categories</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          @for (category of categories; track category.id) {
+            <a [routerLink]="['/products']" [queryParams]="{ category: category.id }"
+               class="glass-card p-6 rounded-xl text-center group hover:-translate-y-2 transition-transform duration-300">
+              <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00f0ff]/10 to-[#ff00ff]/10
+                          flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <!-- You might want to add icons to your category model or use a default one -->
+                <svg class="w-8 h-8 text-[#00f0ff] group-hover:text-[#ff00ff] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+                </svg>
+              </div>
+              <h3 class="text-white font-['Orbitron'] font-semibold group-hover:text-[#00f0ff] transition-colors">
+                {{ category.name }}
+              </h3>
+              <p class="text-[#6b6b8a] text-xs mt-1">{{ category.productCount || 0 }} Products</p>
+            </a>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ============================================
+       FEATURES SECTION - Glass Cards
+       ============================================ -->
+
+  <!-- ============================================
+       CTA SECTION - Newsletter/Contact
+       ============================================ -->
+  <section class="relative py-24">
+    <div class="container mx-auto px-4">
+      <div class="relative overflow-hidden rounded-3xl
+                  bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e]
+                  border border-white/10
+                  p-8 sm:p-12 lg:p-16">
+
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#00f0ff]/10 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-[#ff00ff]/10 rounded-full blur-[100px]"></div>
+
+        <!-- Animated Border -->
+        <div class="absolute inset-0 rounded-3xl p-[1px]
+                    bg-gradient-to-r from-[#00f0ff]/50 via-transparent to-[#ff00ff]/50
+                    opacity-50"></div>
+
+        <div class="relative z-10 text-center max-w-3xl mx-auto">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Orbitron'] font-bold text-white mb-6">
+            Ready to <span class="text-gradient">Transform</span> Your Tech?
+          </h2>
+          <p class="text-lg text-[#a0a0c0] mb-10">
+            Join thousands of satisfied customers who trust AIB Electronics for their electronics needs.
+            Start your journey today.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a routerLink="/products" class="btn-cyber text-lg !px-10 !py-4">
+              Shop Now
+            </a>
+            <a routerLink="/contact" class="btn-cyber-outline text-lg !px-10 !py-4">
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<style>
+  /* Feature Card Styles */
+  .feature-card {
+    position: relative;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00f0ff, #ff00ff);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(0, 240, 255, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 240, 255, 0.1);
+  }
+
+  .feature-card:hover::before {
+    opacity: 1;
+  }
+
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1.5rem;
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 16px;
+    color: #00f0ff;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+  }
+
+  .feature-icon-magenta {
+    background: rgba(255, 0, 255, 0.1);
+    border-color: rgba(255, 0, 255, 0.2);
+    color: #ff00ff;
+  }
+
+  .feature-card:hover .feature-icon-magenta {
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+  }
+
+  .feature-icon-green {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+  }
+
+  .feature-card:hover .feature-icon-green {
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+  }
+
+  .feature-icon-purple {
+    background: rgba(168, 85, 247, 0.1);
+    border-color: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+  }
+
+  .feature-card:hover .feature-icon-purple {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+  }
+
+  .feature-icon-orange {
+    background: rgba(255, 107, 0, 0.1);
+    border-color: rgba(255, 107, 0, 0.2);
+    color: #ff6b00;
+  }
+
+  .feature-card:hover .feature-icon-orange {
+    box-shadow: 0 0 30px rgba(255, 107, 0, 0.3);
+  }
+
+  .feature-icon-blue {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+  }
+
+  .feature-card:hover .feature-icon-blue {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .feature-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-desc {
+    color: #a0a0c0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-stats {
+    display: flex;
+    gap: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #00f0ff;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: #6b6b8a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
