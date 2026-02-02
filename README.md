@@ -316,7 +316,6 @@ aib-electronics/
 │   │   └── 🔧 util/                   # Utility Classes
 │   └── 📂 src/main/resources/
 │       ├── ⚙️ application.yaml        # Application configuration
-│       ├── 📧 templates/              # Email templates
 │       └── 🗄️ aib_routines.sql       # Database procedures
 ├── 🎨 aib-frontend/                   # Angular SPA Application
 │   └── 📂 src/app/
@@ -873,4 +872,5 @@ git push origin feature/cyber-enhancement
 <div style="background: linear-gradient(90deg, transparent, rgba(0,240,255,0.3), transparent); height: 2px; margin: 30px 0;"></div>
 
 ---
+
 
