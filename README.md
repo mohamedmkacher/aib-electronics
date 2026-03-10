@@ -512,68 +512,6 @@ aib-electronics/
 
 ---
 
-## 🗄️ **DATABASE ARCHITECTURE**
-
-<div style="background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(0,240,255,0.08)); border: 1px solid rgba(59,130,246,0.3); border-radius: 20px; padding: 25px; margin: 25px 0;">
-
-<details>
-<summary style="font-size: 1.2em; font-weight: bold; cursor: pointer; padding: 10px; background: rgba(59,130,246,0.1); border-radius: 10px; margin-bottom: 15px;">� Click to explore database structure</summary>
-
-### 🏗️ **CORE ENTITY RELATIONSHIPS**
-
-```mermaid
-erDiagram
-    USERS ||--o{ ORDERS : places
-    USERS ||--o{ ADDRESSES : has
-    USERS ||--|| CARTS : owns
-    USERS ||--o{ VERIFICATION_TOKENS : generates
-    USERS ||--o{ PASSWORD_RESET_TOKENS : requests
-    
-    ORDERS ||--o{ ORDER_ITEMS : contains
-    ORDER_ITEMS }o--|| PRODUCTS : references
-    
-    CARTS ||--o{ CART_ITEMS : contains
-    CART_ITEMS }o--|| PRODUCTS : references
-    
-    PRODUCTS }o--|| CATEGORIES : belongs_to
-    
-    USERS {
-        bigint id PK
-        string email UK
-        string password
-        string first_name
-        string last_name
-        string phone
-        boolean email_verified
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    PRODUCTS {
-        bigint id PK
-        string name
-        string slug UK
-        text description
-        decimal price
-        integer stock_quantity
-        string image_url
-        boolean active
-        bigint category_id FK
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    ORDERS {
-        bigint id PK
-        string order_number UK
-        bigint user_id FK
-        decimal total_amount
-        string status
-        string payment_intent_id
-        timestamp created_at
-        timestamp updated_at
-    }
-```
 
 ### 📊 **DATABASE TABLES OVERVIEW**
 
@@ -584,7 +522,6 @@ erDiagram
 **👥 User Management**
 - **users** - User accounts and profiles
 - **roles** - User roles and permissions (USER, ADMIN)
-- **user_roles** - Many-to-many relationship table
 - **addresses** - User delivery addresses
 - **verification_tokens** - Email verification tokens
 - **password_reset_tokens** - Password reset tokens
@@ -596,9 +533,7 @@ erDiagram
 **📦 Product Catalog**
 - **products** - Product information and inventory
 - **categories** - Product categories with hierarchy
-- **product_images** - Product image galleries
-- **product_reviews** - Customer reviews and ratings
-- **product_attributes** - Dynamic product properties
+
 
 </div>
 
@@ -609,18 +544,13 @@ erDiagram
 - **cart_items** - Items in shopping carts
 - **orders** - Order headers with status
 - **order_items** - Individual order line items
-- **order_status_history** - Order status change tracking
+
 
 </div>
 
 <div style="background: rgba(255,107,0,0.05); border: 1px solid rgba(255,107,0,0.2); border-radius: 10px; padding: 15px;">
 
-**💳 Payment & Analytics**
-- **payments** - Payment transaction records
-- **refunds** - Refund processing history
-- **audit_logs** - System activity tracking
-- **email_logs** - Email delivery tracking
-- **system_settings** - Application configuration
+
 
 </div>
 
@@ -872,6 +802,7 @@ git push origin feature/cyber-enhancement
 <div style="background: linear-gradient(90deg, transparent, rgba(0,240,255,0.3), transparent); height: 2px; margin: 30px 0;"></div>
 
 ---
+
 
 
 
